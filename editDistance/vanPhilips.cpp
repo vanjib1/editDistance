@@ -8,7 +8,7 @@
  *	http://stackoverflow.com/questions/12375591/vector-of-vectors-to-create-matrix
  *	http://leojiang.com/experiments/levenshtein/
  *	http://computing.southern.edu/halterman/Courses/Winter2017/318/Assignments/editdistance.html
- *	http://computing.southern.edu/halterman/Videos/v83221/318/318-2017-04-05a.mp4
+ *	http://computing.southern.edu/halterman/Courses/Winter2017/318/s673562/Slides/edit-distance-handout.pdf
  *	
  */
 
@@ -20,29 +20,29 @@
 std::vector<std::vector<int>> compareString(std::string workingString, std::string comparisonString);
 int getEditDistance(std::vector<std::vector<int>> matrix);
 std::string editOperations(std::vector<std::vector<int>> matrix, std::string workingString, std::string comparisonString);
- 
+
+
 int main()
 {
-		std::string workingString;
-		std::string comparisonString;
-		do
-		{
-			std::cout << "Turn: ";
-			std::getline(std::cin, workingString);
-			if (workingString == "")
-				break;
-			std::cout << "into: ";
-			std::getline(std::cin, comparisonString);
+	std::string workingString;
+	std::string comparisonString;
+	do
+	{
+		std::cout << "Turn: ";
+		getline(std::cin, workingString);
+		if (workingString == "")
+			break;
+		std::cout << "into: ";
+		getline(std::cin, comparisonString);
 
-			std::vector<std::vector<int>> matrix = compareString(workingString, comparisonString);
-			std::cout << getEditDistance(matrix) << ":";
-			std::cout << editOperations(matrix, workingString, comparisonString) << std::endl;
-		} while (workingString != "");
+		std::vector<std::vector<int>> matrix = compareString(workingString, comparisonString);
+		std::cout << getEditDistance(matrix) << ":";
+		std::cout << editOperations(matrix, workingString, comparisonString) << std::endl;
+	}
+	while (workingString != "");
 
-	
-	
 
-    return 0;
+	return 0;
 }
 
 /*creates a Levenshtein distance matrix using a workingString and a comparisonString. 
@@ -61,9 +61,8 @@ std::vector<std::vector<int>> compareString(std::string workingString, std::stri
 	* n
 	* g
 	*/
-	enum operation { keep = 0, edit = 1 }; //edit entails replacing, deleting, and inserting
 
-	std::vector<std::vector<int> > matrix(comparisonString.size() + 1, std::vector<int>(workingString.size() + 1));
+	std::vector<std::vector<int>> matrix(comparisonString.size() + 1, std::vector<int>(workingString.size() + 1));
 
 	for (auto i = 0; i < matrix.size(); i++) //comparison string set up
 	{
@@ -79,21 +78,21 @@ std::vector<std::vector<int>> compareString(std::string workingString, std::stri
 	{
 		for (auto x = 1; x < matrix.size(); x++) //moves horizontally
 		{
-			if (comparisonString[x-1] == workingString[y-1])
+			if (comparisonString[x - 1] == workingString[y - 1])
 			{
-				matrix[x][y] = matrix[x-1][y-1];
+				matrix[x][y] = matrix[x - 1][y - 1];
 			}
 			else
 			{
-				if((matrix[x-1][y] <= matrix[x-1][y-1]) && matrix[x-1][y] <= matrix[x][y-1])
+				if ((matrix[x - 1][y] <= matrix[x - 1][y - 1]) && matrix[x - 1][y] <= matrix[x][y - 1])
 				{
 					matrix[x][y] = matrix[x - 1][y] + 1;
 				}
-				if(matrix[x - 1][y -1] <= matrix[x - 1][y] && (matrix[x - 1][y - 1] <= matrix[x][y-1]))
+				if (matrix[x - 1][y - 1] <= matrix[x - 1][y] && (matrix[x - 1][y - 1] <= matrix[x][y - 1]))
 				{
 					matrix[x][y] = matrix[x - 1][y - 1] + 1;
-				} 
-				if((matrix[x][y-1] <= matrix[x - 1][y]) && (matrix[x][y - 1] <= matrix[x - 1][y - 1]))
+				}
+				if ((matrix[x][y - 1] <= matrix[x - 1][y]) && (matrix[x][y - 1] <= matrix[x - 1][y - 1]))
 				{
 					matrix[x][y] = matrix[x][y - 1] + 1;
 				}
@@ -113,13 +112,13 @@ int getEditDistance(std::vector<std::vector<int>> matrix)
  * It returns a string of the operations*/
 std::string editOperations(std::vector<std::vector<int>> matrix, std::string workingString, std::string comparisonString)
 {
-	int x = matrix.size()-1;
-	int y = matrix[0].size()-1;
+	int x = matrix.size() - 1;
+	int y = matrix[0].size() - 1;
 	std::string edits = "";
 	std::string s;
 	while (x != 0 || y != 0)
 	{
-		if(x == 0) //if x == 0 the only way to go is up so deletion by default
+		if (x == 0) //if x == 0 the only way to go is up so deletion by default
 		{
 			edits = " -" + edits;
 			y -= 1;
@@ -149,16 +148,13 @@ std::string editOperations(std::vector<std::vector<int>> matrix, std::string wor
 		}
 		else if (matrix[x - 1][y] <= matrix[x - 1][y - 1] && matrix[x - 1][y] <= matrix[x][y - 1]) //moved back horizontally: insert
 		{
-			
-			s.push_back(comparisonString[x-1]);
+			s.push_back(comparisonString[x - 1]);
 			edits = " +" + s + edits;
 			s.clear();
 			x -= 1;
-			
 		}
 		else if (matrix[x][y - 1] <= matrix[x - 1][y] && matrix[x][y - 1] <= matrix[x - 1][y - 1]) //moved vertically: deletion
 		{
-
 			edits = " -" + edits;
 			y -= 1;
 		}
