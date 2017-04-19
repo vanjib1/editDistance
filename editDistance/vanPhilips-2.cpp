@@ -2,7 +2,7 @@
 /*Author          : J.Brandon Van Philips
  *Date            : 4/17/17
  *Assignment      : Dynamic Programming—Edit Distance
- *File            : vanPhilips.cpp
+ *File            : vanPhilips-2.cpp
  *Honor Statement : I have neither given nor received any unauthorized help on this assignment.
  *resources       : 
  *	http://stackoverflow.com/questions/12375591/vector-of-vectors-to-create-matrix
